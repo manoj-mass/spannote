@@ -18,7 +18,7 @@ The library is split into packages. Use the ones you need.
 
 - [React and Next.js](guides/react-and-nextjs.md): provider setup, server rendering, App Router.
 - [Storage](guides/storage.md): the memory store, the W3C protocol store, and writing your own adapter.
-- [Highlights](guides/highlights.md): drawing highlights, styling them, and the span fallback.
+- [Highlights](guides/highlights.md): drawing highlights, styling them, and the mark fallback.
 - [Concurrency and versions](guides/concurrency.md): conflicts, ETags, and a known gap to read before shipping.
 - [Testing](guides/testing.md): testing components and anchors with jsdom.
 
@@ -37,6 +37,8 @@ The library is split into packages. Use the ones you need.
 - [Troubleshooting](troubleshooting.md): symptoms and fixes.
 - [FAQ](faq.md): common questions.
 - [Releasing](RELEASING.md): how packages are versioned and published.
+- [Naming standards](NAMING.md): how packages, files, exports and external strings are named.
+- [Guidance for AI agents](../AGENTS.md): how automated agents should work in this repository.
 
 ## Packages at a glance
 
@@ -44,7 +46,7 @@ The library is split into packages. Use the ones you need.
 | -------------------- | -------------------------------------------------------- | ------------- | ---------------------- |
 | `@spannote/model`    | Types, parsing, JSON-LD, the storage port                | nothing       | no                     |
 | `@spannote/anchor`   | Turning a selection into selectors, and finding it again | model         | reads text             |
-| `@spannote/render`   | Drawing highlights                                       | nothing       | only the span fallback |
+| `@spannote/render`   | Drawing highlights                                       | nothing       | only the mark fallback |
 | `@spannote/protocol` | Talking to a W3C annotation server                       | model         | no                     |
 | `@spannote/core`     | The annotation list, anchors, and writes                 | model, anchor | no                     |
 | `@spannote/react`    | React hooks and provider                                 | core, model   | through core           |

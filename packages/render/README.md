@@ -4,7 +4,7 @@ Draws highlights for DOM ranges.
 
 - `CssHighlightRenderer` uses the CSS Custom Highlight API. It leaves the host DOM untouched.
   Style it with `::highlight(spannote-<name>)`.
-- `SpanHighlightRenderer` is the fallback. It wraps text in spans and restores it on `clear`.
+- `MarkHighlightRenderer` is the fallback. It wraps text in `<mark>` elements and restores it on `clear`.
 - `createHighlightRenderer()` picks the right one for the environment.
 
 ```ts
@@ -21,4 +21,4 @@ renderer.draw('comments', [range]);
 ```
 
 Measured in the spike: zero DOM mutations in Chrome and Safari for the CSS path, against 26 to 90
-mutation records for spans.
+mutation records for span wrapping, measured before the switch to `<mark>`. Re-measure before relying on the exact figure.

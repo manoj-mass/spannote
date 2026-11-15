@@ -1,7 +1,7 @@
 {
   "name": "@spannote/render",
   "version": "0.1.0",
-  "description": "Draw highlights for DOM ranges: CSS Custom Highlight API with a span fallback.",
+  "description": "Draw highlights for DOM ranges: CSS Custom Highlight API with a mark fallback.",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,

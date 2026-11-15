@@ -1,6 +1,6 @@
 /**
  * Draws highlights for a set of live DOM ranges. Implementations decide the mechanism (CSS
- * Custom Highlight API or span wrapping). Callers depend only on this interface (Liskov and
+ * Custom Highlight API or mark wrapping). Callers depend only on this interface (Liskov and
  * Dependency Inversion).
  */
 export interface HighlightRenderer {

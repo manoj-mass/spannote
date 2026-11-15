@@ -55,12 +55,12 @@ text shadow, and a few others. Layout properties do not.
 
 Pass `prefix` to `createHighlightRenderer` to change the prefix.
 
-## Span fallback
+## Mark fallback
 
 Browsers without the CSS Custom Highlight API get a fallback. `createHighlightRenderer` chooses it
 automatically, so you do not need to check.
 
-The fallback wraps the highlighted text in `<span class="spannote-highlight">` elements, with a
+The fallback wraps the highlighted text in `<mark class="spannote-highlight">` elements, with a
 `data-spannote-highlight` attribute naming the group. It edits the page DOM, which can disturb
 frameworks that own that DOM. `clear` and `dispose` restore the original text nodes.
 
@@ -73,16 +73,17 @@ Style the fallback with the class:
 ```
 
 Measured behaviour (our tests): the CSS path produced zero DOM mutation records in Chrome and
-Safari; the span fallback produced 26 to 90.
+Safari. Span wrapping, measured before the switch to `<mark>`, produced 26 to 90. The `<mark>`
+fallback has not been measured yet.
 
 ## Choosing the renderer explicitly
 
 ```ts
-import { CssHighlightRenderer, SpanHighlightRenderer } from '@spannote/render';
+import { CssHighlightRenderer, MarkHighlightRenderer } from '@spannote/render';
 
 const renderer = new CssHighlightRenderer(CSS.highlights, Highlight, 'spannote');
 // or
-const fallback = new SpanHighlightRenderer('my-highlight');
+const fallback = new MarkHighlightRenderer('my-highlight');
 ```
 
 `createHighlightRenderer({ environment })` accepts a fake environment in tests:

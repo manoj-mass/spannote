@@ -42,9 +42,9 @@ text matches. If it does:
 Ranges are live, but a DOM change can move them. Redraw after changes: call `refreshAnchors`, then
 draw from the `anchors` event.
 
-## Span fallback breaks my framework
+## Mark fallback breaks my framework
 
-The span fallback inserts nodes into the page. Frameworks that own that DOM (React, for example)
+The mark fallback inserts nodes into the page. Frameworks that own that DOM (React, for example)
 may complain when text nodes they manage are split. Prefer the CSS Custom Highlight API, which is
 available in all current evergreen browsers. If you must use the fallback, draw inside an element
 you own, outside the framework's render output.

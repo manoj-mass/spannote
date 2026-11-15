@@ -1,6 +1,6 @@
 export type { HighlightConstructor, HighlightRegistry, HighlightRenderer } from './types.js';
 export { CssHighlightRenderer } from './css-highlight.js';
-export { SpanHighlightRenderer } from './span-highlight.js';
+export { MarkHighlightRenderer } from './mark-highlight.js';
 export {
   createHighlightRenderer,
   globalHighlightEnvironment,

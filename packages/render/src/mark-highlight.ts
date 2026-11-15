@@ -3,7 +3,7 @@ import type { HighlightRenderer } from './types.js';
 const SHOW_TEXT = 0x4;
 const FILTER_ACCEPT = 1;
 const FILTER_REJECT = 2;
-const SPAN_NAME_ATTRIBUTE = 'data-spannote-highlight';
+const NAME_ATTRIBUTE = 'data-spannote-highlight';
 
 interface TextPiece {
   readonly node: Text;
@@ -13,29 +13,30 @@ interface TextPiece {
 
 /**
  * Fallback renderer for browsers without the CSS Custom Highlight API. Wraps the covered text in
- * `<span>` elements. This is the only renderer that edits the host DOM, so it is used only when
- * necessary, and `clear` restores the original text nodes.
+ * `<mark>` elements, the HTML element for text highlighted for reference. This is the only renderer
+ * that edits the host DOM, so it is used only when necessary. `clear` restores the original text
+ * nodes and touches only the marks this renderer created, so a page's own marks are left alone.
  */
-export class SpanHighlightRenderer implements HighlightRenderer {
+export class MarkHighlightRenderer implements HighlightRenderer {
   private readonly groups = new Map<string, HTMLElement[]>();
 
   constructor(private readonly className: string = 'spannote-highlight') {}
 
   draw(name: string, ranges: readonly Range[]): void {
     this.clear(name);
-    const spans: HTMLElement[] = [];
+    const marks: HTMLElement[] = [];
     for (const range of ranges) {
       for (const piece of textPiecesOf(range)) {
-        spans.push(wrap(piece, this.className, name));
+        marks.push(wrap(piece, this.className, name));
       }
     }
-    this.groups.set(name, spans);
+    this.groups.set(name, marks);
   }
 
   clear(name: string): void {
-    const spans = this.groups.get(name);
-    if (!spans) return;
-    for (const span of spans) unwrap(span);
+    const marks = this.groups.get(name);
+    if (!marks) return;
+    for (const mark of marks) unwrap(mark);
     this.groups.delete(name);
   }
 
@@ -68,25 +69,25 @@ function textPiecesOf(range: Range): TextPiece[] {
   return pieces;
 }
 
-/** Isolates the piece's text in its own node and wraps it in a span. */
+/** Isolates the piece's text in its own node and wraps it in a mark. */
 function wrap(piece: TextPiece, className: string, name: string): HTMLElement {
   let target = piece.node;
   if (piece.end < target.length) target.splitText(piece.end);
   if (piece.start > 0) target = target.splitText(piece.start);
   const doc = target.ownerDocument;
-  const span = doc.createElement('span');
-  span.className = className;
-  span.setAttribute(SPAN_NAME_ATTRIBUTE, name);
-  target.parentNode?.insertBefore(span, target);
-  span.appendChild(target);
-  return span;
+  const mark = doc.createElement('mark');
+  mark.className = className;
+  mark.setAttribute(NAME_ATTRIBUTE, name);
+  target.parentNode?.insertBefore(mark, target);
+  mark.appendChild(target);
+  return mark;
 }
 
-/** Moves the span's children back to its place, then removes the span. */
-function unwrap(span: HTMLElement): void {
-  const parent = span.parentNode;
+/** Moves the mark's children back to its place, then removes the mark. */
+function unwrap(mark: HTMLElement): void {
+  const parent = mark.parentNode;
   if (!parent) return;
-  while (span.firstChild) parent.insertBefore(span.firstChild, span);
-  parent.removeChild(span);
+  while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+  parent.removeChild(mark);
   parent.normalize();
 }

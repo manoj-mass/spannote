@@ -6,7 +6,7 @@ Draws highlights for DOM ranges. Two mechanisms, one interface.
 import {
   createHighlightRenderer,
   CssHighlightRenderer,
-  SpanHighlightRenderer,
+  MarkHighlightRenderer,
   globalHighlightEnvironment,
   type HighlightRenderer,
 } from '@spannote/render';
@@ -42,7 +42,7 @@ interface RenderEnvironment {
 ```
 
 Returns a `CssHighlightRenderer` when both `highlights` and `Highlight` are present, and a
-`SpanHighlightRenderer` otherwise.
+`MarkHighlightRenderer` otherwise.
 
 ## CssHighlightRenderer
 
@@ -66,17 +66,17 @@ Style a group in CSS:
 }
 ```
 
-## SpanHighlightRenderer
+## MarkHighlightRenderer
 
 ```ts
-class SpanHighlightRenderer implements HighlightRenderer {
+class MarkHighlightRenderer implements HighlightRenderer {
   constructor(className?: string); // default "spannote-highlight"
 }
 ```
 
-Wraps each covered piece of text in a `<span class={className} data-spannote-highlight={name}>`.
+Wraps each covered piece of text in a `<mark class={className} data-spannote-highlight={name}>`.
 Pieces that begin or end inside a text node are split first, so only the covered characters are
-wrapped. `clear` moves the children back to their original place, removes the span, and normalizes
+wrapped. `clear` moves the children back to their original place, removes the mark, and normalizes
 the parent so adjacent text nodes merge again.
 
 Because it edits the DOM, do not use it inside a region a framework manages, unless the framework
@@ -106,14 +106,17 @@ browser lacks it, so `createHighlightRenderer` picks the fallback.
 
 ## Behaviour notes
 
-- Empty ranges are ignored by the span renderer.
+- Empty ranges are ignored by the mark renderer.
 - The CSS renderer keeps the ranges it was given. If the DOM changes, redraw.
 - Ranges from different groups may overlap. Each group is independent.
 - `dispose` only removes groups this renderer drew; it does not touch other highlights.
 
 ## Measured behaviour
 
-| Mechanism                | DOM mutation records (Chrome, 5 pages) | (Safari, 6 pages) |
-| ------------------------ | -------------------------------------- | ----------------- |
-| CSS Custom Highlight API | 0                                      | 0                 |
-| Span fallback            | 26 to 42                               | 26 to 90          |
+| Mechanism                                     | DOM mutation records (Chrome, 5 pages) | (Safari, 6 pages) |
+| --------------------------------------------- | -------------------------------------- | ----------------- |
+| CSS Custom Highlight API                      | 0                                      | 0                 |
+| Span wrapping (before the switch to `<mark>`) | 26 to 42                               | 26 to 90          |
+
+The `<mark>` fallback has not been measured yet. Its mechanism is the same as span wrapping, so
+expect similar counts, but measure it before quoting a figure.

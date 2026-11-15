@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   CssHighlightRenderer,
-  SpanHighlightRenderer,
+  MarkHighlightRenderer,
   createHighlightRenderer,
 } from '@spannote/render';
 
@@ -58,21 +58,21 @@ describe('createHighlightRenderer', () => {
     expect(renderer).toBeInstanceOf(CssHighlightRenderer);
   });
 
-  it('falls back to spans when the API is missing', () => {
-    expect(createHighlightRenderer({ environment: {} })).toBeInstanceOf(SpanHighlightRenderer);
+  it('falls back to marks when the API is missing', () => {
+    expect(createHighlightRenderer({ environment: {} })).toBeInstanceOf(MarkHighlightRenderer);
   });
 });
 
-describe('SpanHighlightRenderer', () => {
+describe('MarkHighlightRenderer', () => {
   it('wraps the covered text and restores the original DOM on clear', () => {
     const root = document.createElement('div');
     root.innerHTML = '<p>Hello <em>brave</em> new world</p>';
     const before = root.innerHTML;
 
-    const renderer = new SpanHighlightRenderer('hl');
+    const renderer = new MarkHighlightRenderer('hl');
     renderer.draw('g', [textRange(root, 'new world')]);
-    expect(root.querySelectorAll('span.hl')).toHaveLength(1);
-    expect(root.querySelector('span.hl')?.textContent).toBe('new world');
+    expect(root.querySelectorAll('mark.hl')).toHaveLength(1);
+    expect(root.querySelector('mark.hl')?.textContent).toBe('new world');
 
     renderer.clear('g');
     expect(root.innerHTML).toBe(before);

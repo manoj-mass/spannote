@@ -108,6 +108,6 @@ Run the page in a real browser (Playwright or similar) for:
 
 - CSS Custom Highlight rendering (jsdom has no paint).
 - Behaviour under real layout and real frameworks.
-- The span fallback in a browser that lacks the API.
+- The mark fallback in a browser that lacks the API.
 
 The SpanNote repository's own tests do not include a browser suite yet (see the roadmap).

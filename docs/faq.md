@@ -15,7 +15,7 @@ render with your framework. Vue and Angular bindings are planned.
 
 **Does it modify my page?**
 Not by default. Anchoring only reads text. Highlights use the CSS Custom Highlight API, which does
-not change the DOM. The span fallback does change the DOM, and it restores it on `clear`.
+not change the DOM. The mark fallback does change the DOM, and it restores it on `clear`.
 
 **What happens when the page changes?**
 Each annotation is re-resolved against the new page. An annotation whose passage moved is still
@@ -52,7 +52,7 @@ differ.
 
 **Which browsers are supported?**
 The current and previous major versions of evergreen browsers, with the DOM `Range` API. The CSS
-path needs the CSS Custom Highlight API; other browsers use the span fallback.
+path needs the CSS Custom Highlight API; other browsers use the mark fallback.
 
 **Is it safe to render user comments?**
 Comment text is data. Render it as text (React escapes it). If you render Markdown or HTML, use a
