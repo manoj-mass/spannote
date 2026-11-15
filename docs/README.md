@@ -17,6 +17,8 @@ The library is split into packages. Use the ones you need.
 **Guides**
 
 - [React and Next.js](guides/react-and-nextjs.md): provider setup, server rendering, App Router.
+- [Vue](guides/vue.md): the plugin, composables, and a Vue example.
+- [Angular](guides/angular.md): the providers, signal functions, and an Angular example.
 - [Storage](guides/storage.md): the memory store, the W3C protocol store, and writing your own adapter.
 - [Highlights](guides/highlights.md): drawing highlights, styling them, and the mark fallback.
 - [Concurrency and versions](guides/concurrency.md): conflicts, ETags, and a known gap to read before shipping.
@@ -31,6 +33,8 @@ The library is split into packages. Use the ones you need.
 - [@spannote/protocol](api/protocol.md): the W3C protocol client and its errors.
 - [@spannote/core](api/core.md): the annotation service.
 - [@spannote/react](api/react.md): provider and hooks.
+- [@spannote/vue](api/vue.md): plugin, composables and root binder for Vue 3.
+- [@spannote/angular](api/angular.md): providers, signal functions and root binder for Angular 21.
 
 **Reference material**
 
@@ -51,6 +55,8 @@ The library is split into packages. Use the ones you need.
 | `@spannote/protocol` | Talking to a W3C annotation server                       | model         | no                     |
 | `@spannote/core`     | The annotation list, anchors, and writes                 | model, anchor | no                     |
 | `@spannote/react`    | React hooks and provider                                 | core, model   | through core           |
+| `@spannote/vue`      | Vue plugin, composables and root binder                  | core, model   | through core           |
+| `@spannote/angular`  | Angular providers, signal functions and root binder      | core, model   | through core           |
 
 ## Status
 

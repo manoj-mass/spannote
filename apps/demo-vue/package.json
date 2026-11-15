@@ -1,0 +1,24 @@
+{
+  "name": "@spannote/demo-vue",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Vue demo app that imports the built SpanNote packages. It shares the browser smoke test with apps/demo.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@spannote/core": "0.1.0",
+    "@spannote/model": "0.1.0",
+    "@spannote/render": "0.1.0",
+    "@spannote/vue": "0.1.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.11",
+    "vite": "^7.3.8",
+    "vue-tsc": "^3.3.14"
+  }
+}

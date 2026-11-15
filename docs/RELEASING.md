@@ -112,7 +112,7 @@ npm init -y
 npm install @spannote/core@0.1.0 @spannote/react@0.1.0 @spannote/render@0.1.0 react react-dom
 ```
 
-Then copy `apps/demo/src` into that folder and run the demo against the registry packages. Repeat the
+Then copy `apps/demo-react/src` into that folder and run the demo against the registry packages. Repeat the
 smoke test there before you announce a release.
 
 ## Checklist before every publish

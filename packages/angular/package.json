@@ -1,0 +1,44 @@
+{
+  "name": "@spannote/angular",
+  "version": "0.1.0",
+  "description": "Angular bindings for SpanNote: environment providers, signal-based functions for annotations and anchors, and a root binder.",
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "main": "./dist/fesm2022/spannote-angular.mjs",
+  "module": "./dist/fesm2022/spannote-angular.mjs",
+  "types": "./dist/types/spannote-angular.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "ng-packagr -p ng-package.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@spannote/core": "0.1.0",
+    "@spannote/model": "0.1.0"
+  },
+  "peerDependencies": {
+    "@angular/core": "^21.0.0",
+    "rxjs": "^7.8.0"
+  },
+  "keywords": [
+    "angular",
+    "signals",
+    "annotation",
+    "comments"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manoj-mass/spannote.git",
+    "directory": "packages/angular"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

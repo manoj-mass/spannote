@@ -23,18 +23,22 @@ your last edit.
 
 ## Repository map
 
-| Path                       | Contents                                                            |
-| -------------------------- | ------------------------------------------------------------------- |
-| `packages/model`           | W3C data types, parsing, JSON-LD, the storage port. No DOM.         |
-| `packages/anchor`          | Turns ranges into selectors and finds them again. Reads the DOM.    |
-| `packages/render`          | Draws highlights (CSS Custom Highlight API; mark fallback).         |
-| `packages/protocol`        | W3C Annotation Protocol client and a storage adapter.               |
-| `packages/core`            | Annotation service: list, anchors, writes, events. No framework.    |
-| `packages/react`           | React provider and hooks over the core service.                     |
-| `apps/demo`                | Demo app that imports the built packages; has a browser smoke test. |
-| `docs/`                    | User documentation, architecture and standards.                     |
-| `.changeset/`              | Pending release notes.                                              |
-| `.github/workflows/ci.yml` | The CI pipeline; it runs the same checks as `npm run check`.        |
+| Path                       | Contents                                                           |
+| -------------------------- | ------------------------------------------------------------------ |
+| `packages/model`           | W3C data types, parsing, JSON-LD, the storage port. No DOM.        |
+| `packages/anchor`          | Turns ranges into selectors and finds them again. Reads the DOM.   |
+| `packages/render`          | Draws highlights (CSS Custom Highlight API; mark fallback).        |
+| `packages/protocol`        | W3C Annotation Protocol client and a storage adapter.              |
+| `packages/core`            | Annotation service: list, anchors, writes, events. No framework.   |
+| `packages/react`           | React provider and hooks over the core service.                    |
+| `packages/vue`             | Vue plugin, composables and root binder over the core service.     |
+| `packages/angular`         | Angular providers, signal functions and root binder (ng-packagr).  |
+| `apps/demo-react`          | React demo app that imports the built packages; has a smoke test.  |
+| `apps/demo-vue`            | Vue demo app with the same scenarios; uses the built packages.     |
+| `apps/demo-angular`        | Angular demo app with the same scenarios; uses the built packages. |
+| `docs/`                    | User documentation, architecture and standards.                    |
+| `.changeset/`              | Pending release notes.                                             |
+| `.github/workflows/ci.yml` | The CI pipeline; it runs the same checks as `npm run check`.       |
 
 ## Commands
 

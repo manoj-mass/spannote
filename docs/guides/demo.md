@@ -1,9 +1,17 @@
 # Demo app
 
-The demo is a small React app in `apps/demo`. It imports the SpanNote packages the way an outside
-project would, so you can try the library in a browser without writing any code.
+There are three demos, one per binding. Each one imports the SpanNote packages the way an outside
+project would, so you can try the library in a browser without writing any code:
 
-It uses the **built** packages (`packages/*/dist`), not their source. That means what you see is
+| Demo    | Folder              | Framework  | Dev server URL        |
+| ------- | ------------------- | ---------- | --------------------- |
+| React   | `apps/demo-react`   | React 19   | http://localhost:5173 |
+| Vue     | `apps/demo-vue`     | Vue 3      | http://localhost:5174 |
+| Angular | `apps/demo-angular` | Angular 21 | http://localhost:5175 |
+
+All three show the same page, controls and comment list, and they pass the same smoke test.
+
+They use the **built** packages (`packages/*/dist`), not their source. That means what you see is
 what a user gets from `npm install`.
 
 ## Run it
@@ -12,13 +20,15 @@ From the repository root:
 
 ```bash
 npm install          # once
-npm run build        # builds the packages the demo imports
-npm run demo         # the demo, at http://localhost:5173
+npm run build        # builds the packages the demos import
+npm run demo         # the React demo, at http://localhost:5173
+npm run demo:vue     # the Vue demo, at http://localhost:5174
+npm run demo:angular # the Angular demo, at http://localhost:5175
 npm run demo:server  # optional: local W3C annotation server, at http://localhost:4000
 ```
 
-Open http://localhost:5173 in a current browser. The smoke test has only run in Chrome, so report
-problems in other browsers.
+Open a demo URL in a current browser. The smoke test has only run in Chrome, so report problems in
+other browsers.
 
 ## What to try
 
@@ -94,6 +104,13 @@ The test drives headless Chrome through six scenarios:
 It fails on any uncaught page error. Chrome is found at `/Applications/Google Chrome.app`. Set
 `CHROME_PATH` to use another build, and `DEMO_URL` or `W3C_URL` to point at other servers.
 
+To test the Vue or Angular demo, start that demo and point `DEMO_URL` at it:
+
+```bash
+DEMO_URL=http://localhost:5174/ npm run demo:smoke   # Vue
+DEMO_URL=http://localhost:5175/ npm run demo:smoke   # Angular
+```
+
 ## Limits
 
 - **The W3C server is for testing only.** It keeps everything in memory, so restarting it clears every
@@ -118,3 +135,8 @@ It fails on any uncaught page error. Chrome is found at `/Applications/Google Ch
 | `src/highlights.ts`      | Connects anchors to the highlight renderer                                          |
 | `server/w3c-server.mjs`  | The local W3C annotation server                                                     |
 | `e2e/smoke.mjs`          | The smoke test                                                                      |
+
+The Vue demo (`apps/demo-vue`) keeps the same structure in `src/App.vue` (the page and comment panel),
+`src/service.ts` (URL settings and the service), and `src/main.ts` (the plugin). The Angular demo
+(`apps/demo-angular`) has `src/app.ts` and `src/app.html` for the page, and `src/config.ts` and
+`src/main.ts` for the service and the providers.

@@ -1,0 +1,92 @@
+<header class="page-header">
+  <h1>SpanNote demo (Angular)</h1>
+  <p class="hint" data-testid="status">{{ message() }}</p>
+  <p class="hint">
+    Store: <code>{{ config.store }}</code> · Renderer: <code>{{ config.renderer }}</code>
+  </p>
+</header>
+
+<main class="layout">
+  <!-- ngPreserveWhitespaces keeps the deliberate extra spaces, so the anchoring cases stay realistic. -->
+  <article #article class="article" data-testid="article" ngPreserveWhitespaces>
+    <h1>Pricing review</h1>
+    <p>Across the base, 12% of users churn each quarter after the first renewal.</p>
+    <p>Students can use annotations to refer back to key passages in a long document.</p>
+    <p>
+      Priced items may repeat across the catalogue, so a quote needs its context to be found again.
+    </p>
+    <p>Spacing matters here: these words have extra spaces, and this one&nbsp;is joined.</p>
+  </article>
+
+  <aside class="sidebar">
+    <section class="panel" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">Comments</h2>
+
+      <p class="hint" data-testid="selection-preview">Selection: {{ selectionLabel() }}</p>
+
+      <textarea
+        data-testid="comment-input"
+        aria-label="Comment text"
+        rows="3"
+        placeholder="Write a comment, then select text in the article and press Comment on selection."
+        [value]="draft()"
+        (input)="onDraftInput($event)"
+      ></textarea>
+      <div class="button-row">
+        <button type="button" data-testid="comment-submit" (click)="commentOnSelection()">
+          Comment on selection
+        </button>
+      </div>
+
+      <ul class="comment-list" data-testid="comment-list">
+        @for (annotation of annotations(); track annotation.id) {
+        <li
+          class="comment"
+          data-testid="comment-item"
+          [attr.data-status]="stateOf(annotation.id)?.status ?? 'unknown'"
+        >
+          <blockquote>{{ quoteOf(annotation) }}</blockquote>
+          <p class="comment-body">{{ annotation.body[0]?.value }}</p>
+          <p class="meta">
+            <span
+              data-testid="anchor-status"
+              [attr.data-status]="stateOf(annotation.id)?.status ?? 'unknown'"
+            >
+              {{ stateOf(annotation.id)?.status ?? 'unknown' }}
+            </span>
+            @if (stateOf(annotation.id)?.strategy) { · {{ stateOf(annotation.id)?.strategy }} } @if
+            (annotation.status) { · {{ annotation.status }} }
+          </p>
+          <div class="button-row">
+            <button type="button" (click)="reply(annotation)">Reply</button>
+            <button type="button" (click)="editComment(annotation)">Edit</button>
+            <button type="button" (click)="toggleResolved(annotation)">Resolve</button>
+            <button type="button" (click)="remove(annotation)">Delete</button>
+          </div>
+        </li>
+        }
+      </ul>
+      @if (annotations().length === 0) {
+      <p class="hint">No comments yet.</p>
+      }
+    </section>
+
+    <section class="panel" aria-labelledby="page-changes-heading">
+      <h2 id="page-changes-heading">Simulate page changes</h2>
+      <p class="hint">Each button changes the article, then re-resolves every anchor.</p>
+      <div class="button-row">
+        <button type="button" (click)="applyChange('Insert ad')">Insert ad</button>
+        <button type="button" (click)="applyChange('Wrap content')">Wrap content</button>
+        <button type="button" (click)="applyChange('Reword first quote')">
+          Reword first quote
+        </button>
+        <button type="button" (click)="applyChange('Duplicate quote')">Duplicate quote</button>
+        <button type="button" (click)="applyChange('Non-breaking spaces')">
+          Non-breaking spaces
+        </button>
+        <button type="button" (click)="refreshAnchors()">Refresh anchors</button>
+        <button type="button" (click)="reloadPage()">Reload page</button>
+      </div>
+    </section>
+  </aside>
+</main>

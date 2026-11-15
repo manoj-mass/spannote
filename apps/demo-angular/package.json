@@ -1,0 +1,29 @@
+{
+  "name": "@spannote/demo-angular",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Angular demo app that imports the built SpanNote packages. It shares the browser smoke test with apps/demo.",
+  "type": "module",
+  "scripts": {
+    "start": "ng serve --port 5175",
+    "build": "ng build",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@angular/common": "~21.2.26",
+    "@angular/compiler": "~21.2.26",
+    "@angular/core": "~21.2.26",
+    "@angular/platform-browser": "~21.2.26",
+    "@spannote/angular": "0.1.0",
+    "@spannote/core": "0.1.0",
+    "@spannote/model": "0.1.0",
+    "@spannote/protocol": "0.1.0",
+    "@spannote/render": "0.1.0",
+    "rxjs": "^7.8.2",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "~21.2.26",
+    "@angular/cli": "~21.2.26"
+  }
+}

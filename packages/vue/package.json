@@ -1,0 +1,52 @@
+{
+  "name": "@spannote/vue",
+  "version": "0.1.0",
+  "description": "Vue 3 bindings for SpanNote: a plugin, composables for annotations and anchors, and a root binder.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@spannote/core": "0.1.0",
+    "@spannote/model": "0.1.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "annotation",
+    "comments",
+    "composables"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manoj-mass/spannote.git",
+    "directory": "packages/vue"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

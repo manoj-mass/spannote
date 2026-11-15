@@ -25,7 +25,9 @@
       "@spannote/render": ["./packages/render/src/index.ts"],
       "@spannote/protocol": ["./packages/protocol/src/index.ts"],
       "@spannote/core": ["./packages/core/src/index.ts"],
-      "@spannote/react": ["./packages/react/src/index.ts"]
+      "@spannote/react": ["./packages/react/src/index.ts"],
+      "@spannote/vue": ["./packages/vue/src/index.ts"],
+      "@spannote/angular": ["./packages/angular/src/index.ts"]
     }
   }
 }

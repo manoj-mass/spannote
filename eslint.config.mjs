@@ -29,7 +29,7 @@ export default tseslint.config(
   },
   {
     // The demo's scripts run in Node (server, smoke test) and drive a browser (smoke test).
-    files: ['apps/demo/**/*.mjs'],
+    files: ['apps/demo-react/**/*.mjs'],
     languageOptions: {
       globals: { ...globals.node, ...globals.browser },
     },
