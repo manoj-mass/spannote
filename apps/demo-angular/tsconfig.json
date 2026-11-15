@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "paths": {},
     "target": "ES2022",
     "useDefineForClassFields": false,
     "noEmit": true

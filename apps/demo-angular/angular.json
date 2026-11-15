@@ -14,7 +14,7 @@
             "browser": "src/main.ts",
             "index": "index.html",
             "outputPath": "dist",
-            "tsConfig": "tsconfig.json",
+            "tsConfig": "tsconfig.app.json",
             "styles": ["src/styles.css"]
           }
         },
