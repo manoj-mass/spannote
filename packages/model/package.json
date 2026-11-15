@@ -1,0 +1,45 @@
+{
+  "name": "@spannote/model",
+  "version": "0.1.0",
+  "description": "W3C Web Annotation data model: types, validation and JSON-LD serialization. No DOM.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "annotation",
+    "web-annotation",
+    "w3c",
+    "json-ld"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spannote/spannote.git",
+    "directory": "packages/model"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

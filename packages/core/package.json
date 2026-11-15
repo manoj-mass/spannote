@@ -1,0 +1,49 @@
+{
+  "name": "@spannote/core",
+  "version": "0.1.0",
+  "description": "Framework-agnostic annotation service: anchors, persistence through a store port, typed events.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@spannote/anchor": "0.1.0",
+    "@spannote/model": "0.1.0"
+  },
+  "keywords": [
+    "annotation",
+    "comments",
+    "anchoring",
+    "w3c"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spannote/spannote.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

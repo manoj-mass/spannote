@@ -1,0 +1,45 @@
+{
+  "name": "@spannote/render",
+  "version": "0.1.0",
+  "description": "Draw highlights for DOM ranges: CSS Custom Highlight API with a span fallback.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "highlight",
+    "css-highlight-api",
+    "annotation",
+    "dom"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spannote/spannote.git",
+    "directory": "packages/render"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
