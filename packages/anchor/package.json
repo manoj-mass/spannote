@@ -36,12 +36,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spannote/spannote.git",
+    "url": "git+https://github.com/manoj-mass/spannote.git",
     "directory": "packages/anchor"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "engines": {
     "node": ">=20.19"

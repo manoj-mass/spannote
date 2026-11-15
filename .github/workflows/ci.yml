@@ -5,10 +5,15 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   check:
+    name: Check (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         node: [20, 22, 24]
     steps:
@@ -23,3 +28,32 @@ jobs:
       - run: npm run format:check
       - run: npm run test -- --coverage
       - run: npm run build
+      - run: npm run demo:build
+
+  pack:
+    name: Pack check
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Each package packs only dist, README and LICENSE
+        run: |
+          node -e "
+            const { execSync } = require('node:child_process');
+            const fs = require('node:fs');
+            const allowed = new Set(['package.json', 'README.md', 'LICENSE']);
+            for (const dir of fs.readdirSync('packages')) {
+              const out = JSON.parse(execSync('npm pack --dry-run --json', { cwd: 'packages/' + dir, encoding: 'utf8' }));
+              for (const file of out[0].files.map((f) => f.path)) {
+                const ok = file.startsWith('dist/') || allowed.has(file);
+                if (!ok) throw new Error(dir + ' would publish unexpected file: ' + file);
+              }
+            }
+            console.log('pack contents ok');
+          "

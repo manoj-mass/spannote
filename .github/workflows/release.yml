@@ -1,0 +1,50 @@
+name: Release
+
+# Opens a "Version packages" pull request when changesets are pending. Merging that pull request
+# publishes the new versions to npm. Publishing waits for approval in the `npm-release` environment.
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    name: Version or publish
+    runs-on: ubuntu-latest
+    environment:
+      name: npm-release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - name: Use an npm version that supports provenance and trusted publishing
+        run: npm install -g npm@latest
+      - run: npm ci
+      - name: Check before any release
+        run: npm run check
+      - name: Version or publish
+        uses: changesets/action@v1
+        with:
+          title: 'Release: version packages'
+          commit: 'Version packages'
+          version: npx changeset version
+          publish: npm run build && npx changeset publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
