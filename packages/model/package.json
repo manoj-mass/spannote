@@ -35,6 +35,10 @@
     "url": "git+https://github.com/manoj-mass/spannote.git",
     "directory": "packages/model"
   },
+  "homepage": "https://github.com/manoj-mass/spannote/tree/main/packages/model#readme",
+  "bugs": {
+    "url": "https://github.com/manoj-mass/spannote/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
