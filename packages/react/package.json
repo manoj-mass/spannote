@@ -42,6 +42,10 @@
     "url": "git+https://github.com/manoj-mass/spannote.git",
     "directory": "packages/react"
   },
+  "homepage": "https://github.com/manoj-mass/spannote/tree/main/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/manoj-mass/spannote/issues"
+  },
   "publishConfig": {
     "access": "public"
   },

@@ -38,6 +38,10 @@
     "url": "git+https://github.com/manoj-mass/spannote.git",
     "directory": "packages/protocol"
   },
+  "homepage": "https://github.com/manoj-mass/spannote/tree/main/packages/protocol#readme",
+  "bugs": {
+    "url": "https://github.com/manoj-mass/spannote/issues"
+  },
   "publishConfig": {
     "access": "public"
   },

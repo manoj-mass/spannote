@@ -1,21 +1,53 @@
 # Releasing
 
-SpanNote packages are published to npm under the `@spannote` scope. Versions and changelogs are
-managed with [Changesets](https://github.com/changesets/changesets). The demo app is private and is
-never published.
+SpanNote packages are published to npm under the `@spannote` scope. All packages share one version
+number, set in one place. The demo apps are private and are never published.
 
-## Publishing from GitHub Actions (recommended)
+## Versioning
 
-Two workflows do the work:
+The `version` field in the root `package.json` is the single source of truth. Every package under
+`packages/` uses that version, and so does every `@spannote/*` dependency range in the repository.
 
-- `.github/workflows/ci.yml` runs on every push and pull request: typecheck, lint, format, tests with
-  coverage, the package build, the demo build, and a check that each package packs only `dist`,
-  `README.md` and `LICENSE`.
-- `.github/workflows/release.yml` runs on every push to `main`. When changesets are pending, it opens a
-  pull request named "Release: version packages". Merging that pull request publishes the new versions.
-  The publish job waits for approval in the `npm-release` environment, and it publishes with provenance.
+Change the version with the script, never by hand:
 
-### GitHub setup (once)
+```bash
+npm run version:bump                        # asks for patch, minor, major or a custom version
+npm run version:bump -- minor               # bumps without asking: patch | minor | major | X.Y.Z
+npm run version:bump -- 0.3.0 --yes         # sets an exact version and skips the confirmation
+npm run version:bump -- minor --dry-run     # shows the previous and new versions, writes nothing
+```
+
+The prompt shows the current version and what each choice produces:
+
+```text
+Current version: 0.1.0  (root package.json)
+
+  1) patch   0.1.0 -> 0.1.1   bug fixes
+  2) minor   0.1.0 -> 0.2.0   new features; before 1.0, breaking changes go here too
+  3) major   0.1.0 -> 1.0.0   breaking changes after 1.0
+  4) custom  type any X.Y.Z version
+```
+
+The script lists each published package with its previous and new version, then asks for confirmation.
+It then writes the root `package.json`, every package, and every `@spannote/*` dependency range, and
+refreshes `package-lock.json`. Review the result with `git diff`, run `npm run check`, and commit.
+
+Versions follow [semver](https://semver.org). Before 1.0, a breaking change goes in a minor bump.
+
+## Releasing to npm
+
+1. Run `npm run version:bump` and commit the change.
+2. Merge to `main`. CI runs.
+3. The release workflow (`.github/workflows/release.yml`) publishes each package whose version is not
+   on npm yet. Publishing waits for approval in the `npm-release` environment, and it uses provenance.
+
+A version that is already on npm is skipped. A push that doesn't bump the version publishes nothing.
+npm does not allow a version to be published twice, so always bump before you publish.
+
+Changesets is still installed, but it no longer decides version numbers. `.changeset/config.json` keeps
+all eight packages in one `fixed` group, so if a changeset is ever added, the packages still move together.
+
+## GitHub setup (once)
 
 1. **Create an npm token for CI.** On npmjs.com, create a granular access token with read and write
    permission for the `@spannote` packages. Add it to the repository as a secret named `NPM_TOKEN`
@@ -25,22 +57,12 @@ Two workflows do the work:
 3. **Let the workflow open pull requests.** Settings, then Actions, then General, then turn on _Allow
    GitHub Actions to create and approve pull requests_.
 
-### Day-to-day flow
-
-1. Each change includes a changeset: `npx changeset`.
-2. Merge the change into `main`. CI runs.
-3. The release workflow opens or updates the "Release: version packages" pull request, with the version
-   bumps and changelogs.
-4. Review that pull request and merge it.
-5. Approve the `npm-release` deployment. The workflow publishes to npm.
-
-### Before the first run
-
-The first release needs `.changeset/initial-release.md` removed (see _First release_ below). Otherwise
-the workflow opens a pull request that bumps the packages to 0.2.0.
-
 Trusted publishing (no token at all) is an alternative. npm supports it for GitHub Actions, but you can
-only configure it for a package that already exists. Use `NPM_TOKEN` for the first release, then switch.
+only configure it for a package that already exists.
+
+`.github/workflows/ci.yml` runs on every push and pull request: typecheck, lint, format, tests with
+coverage, the package build, the demo build, and a check that each package packs only `dist`,
+`README.md` and `LICENSE`.
 
 ## One-time setup (local publishing)
 
@@ -61,45 +83,11 @@ described above.
    [docs/NAMING.md](NAMING.md#open-decisions)). The repository URL in each `packages/*/package.json` is
    `https://github.com/manoj-mass/spannote`.
 
-## First release (0.1.0)
+## Provenance (from CI)
 
-The packages are at `0.1.0` and have never been published. The pending changeset in
-`.changeset/initial-release.md` would bump them to `0.2.0`. For the first release, remove it so the
-packages publish at `0.1.0`:
-
-```bash
-git rm .changeset/initial-release.md
-npm run check                  # must pass
-npm run build                  # builds every package
-npx changeset status           # should report nothing to release, or only the packages you expect
-npx changeset publish          # publishes each package whose version is not on npm yet
-git tag -a v0.1.0 -m "SpanNote 0.1.0"
-git push --follow-tags
-```
-
-`changeset publish` skips any version that already exists on npm, so running it twice is safe.
-
-## Each later release
-
-```bash
-npx changeset                  # describe each change: patch, minor or major
-npx changeset version          # bumps versions, updates CHANGELOG.md, bumps dependents
-npm run check
-npm run build
-npx changeset publish
-git add -A && git commit -m "Release <versions>" && git tag -a <version> -m "<version>"
-git push --follow-tags
-```
-
-`@spannote/anchor`, `core`, `protocol`, `render` and `react` depend on `@spannote/model`. Changesets
-bumps dependents together, so a new model version reaches every package in the same release.
-
-## Provenance (optional, from CI)
-
-npm can attach a signed provenance statement to each release, but only when the publish runs in GitHub
-Actions with `id-token: write`. Local publishing does not support it, so `publishConfig` no longer sets
-`provenance`. To add it, publish from a release workflow and set `"provenance": true` in each
-package's `publishConfig`.
+npm attaches a signed provenance statement to a release only when it is published from GitHub Actions
+with `id-token: write`. Local publishing does not support it, so `publishConfig` does not set
+`provenance`.
 
 ## Testing the published packages
 
@@ -117,8 +105,8 @@ smoke test there before you announce a release.
 
 ## Checklist before every publish
 
+- [ ] `npm run version:bump` set the new version, and `git diff` shows only the expected files.
 - [ ] `npm run check` passes on a clean checkout.
-- [ ] Every user-visible change has a changeset.
 - [ ] The docs and the demo match the new version.
 - [ ] `npm pack --dry-run` lists only `dist`, `README.md` and `LICENSE` for each package.
 - [ ] The repository URL, the licence and the namespace domain are correct.

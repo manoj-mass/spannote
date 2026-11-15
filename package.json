@@ -1,7 +1,7 @@
 {
   "name": "spannote-monorepo",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "SpanNote: W3C-conformant annotations for the web. Monorepo root.",
   "license": "Apache-2.0",
   "type": "module",
@@ -23,7 +23,7 @@
     "test:watch": "vitest",
     "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build && npm run demo:build",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version:bump": "node scripts/bump-version.mjs",
     "release": "npm run build && changeset publish",
     "demo": "npm run dev -w @spannote/demo-react",
     "demo:vue": "npm run dev -w @spannote/demo-vue",

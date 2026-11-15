@@ -116,8 +116,10 @@ Follow [docs/NAMING.md](docs/NAMING.md) exactly. The short version:
 
 ## Changes and releases
 
-- Add a changeset (`npx changeset`) for every user-visible change. Pick the bump from the semver rules
-  in [docs/RELEASING.md](docs/RELEASING.md).
+- All packages share one version, set in the root `package.json`. Change it only with
+  `npm run version:bump`, never by hand. Pick patch, minor or major by the semver rules in
+  [docs/RELEASING.md](docs/RELEASING.md). Bump the version before a release; a push without a new
+  version publishes nothing.
 - Do not run `npm publish`, `changeset publish` or any release command without explicit approval.
 - Do not change the licence, the package scope, the namespace IRI or the repository URL without
   explicit approval. These are decisions for a maintainer.
