@@ -10,7 +10,8 @@
     "node": ">=20.19"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "build": "npm run build -w @spannote/model && npm run build -w @spannote/anchor && npm run build -w @spannote/render && npm run build -w @spannote/protocol && npm run build -w @spannote/core && npm run build -w @spannote/react",
@@ -20,10 +21,14 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test && npm run build && npm run demo:build",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "npm run build && changeset publish"
+    "release": "npm run build && changeset publish",
+    "demo": "npm run dev -w @spannote/demo",
+    "demo:server": "npm run server -w @spannote/demo",
+    "demo:build": "npm run build -w @spannote/demo",
+    "demo:smoke": "npm run smoke -w @spannote/demo"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
@@ -32,6 +37,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitest/coverage-v8": "^3.2.7",
     "eslint": "^9.39.1",
+    "globals": "^16.5.0",
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
     "react": "^19.3.1",

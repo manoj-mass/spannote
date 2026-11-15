@@ -21,6 +21,7 @@ The library is split into packages. Use the ones you need.
 - [Highlights](guides/highlights.md): drawing highlights, styling them, and the mark fallback.
 - [Concurrency and versions](guides/concurrency.md): conflicts, ETags, and a known gap to read before shipping.
 - [Testing](guides/testing.md): testing components and anchors with jsdom.
+- [Demo app](guides/demo.md): run the demo in a browser, try each feature, and run the smoke test.
 
 **API reference**
 

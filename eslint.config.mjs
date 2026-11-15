@@ -1,5 +1,6 @@
 // @ts-check
 import js from '@eslint/js';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
@@ -25,5 +26,12 @@ export default tseslint.config(
   {
     files: ['**/*.mjs', '**/*.cjs', '**/*.config.ts', '**/vitest.config.ts'],
     ...tseslint.configs.disableTypeChecked,
+  },
+  {
+    // The demo's scripts run in Node (server, smoke test) and drive a browser (smoke test).
+    files: ['apps/demo/**/*.mjs'],
+    languageOptions: {
+      globals: { ...globals.node, ...globals.browser },
+    },
   },
 );

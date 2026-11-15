@@ -10,6 +10,31 @@ it, or check that the component is rendered inside the provider's `children`.
 `createFromRange` or `reply` need a root. Call `service.attach(root)` first, or mount
 `SpanNoteProvider` before the user can select text.
 
+## The comment is not created when I type in the comment box
+
+Clicking into an input or textarea moves focus there, and that clears the page selection. When the
+user then presses the button, `window.getSelection()` is empty and the range is missing.
+
+Keep the most recent selection inside your content root whenever it changes, and use the saved range
+on submit:
+
+```ts
+// root: the element the service is attached to, the same node you pass to attach().
+let lastRange: Range | undefined;
+document.addEventListener('selectionchange', () => {
+  const range = window.getSelection()?.getRangeAt(0);
+  if (range && !range.collapsed && root.contains(range.commonAncestorContainer)) {
+    lastRange = range.cloneRange();
+  }
+});
+
+async function submit(body: string) {
+  if (lastRange) await service.createFromRange(lastRange, { body });
+}
+```
+
+The demo app does this in `apps/demo/src/comments-panel.tsx`.
+
 ## Every annotation is an orphan after a reload
 
 Possible causes, in order of likelihood:

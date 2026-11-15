@@ -53,6 +53,10 @@ if (range && !range.collapsed) {
 }
 ```
 
+If your comment box is an input or textarea, focusing it clears the page selection. Keep the range
+when the selection changes, and use that saved range when the user submits. See
+[the selection pitfall](troubleshooting.md#the-comment-is-not-created-when-i-type-in-the-comment-box).
+
 `createFromRange` describes the range with a text quote and a text position, saves the
 annotation, and re-resolves all anchors. It throws `EmptySelectionError` when the range covers no
 text, and an `Error` when no root is attached.
@@ -112,3 +116,4 @@ See [Highlights](guides/highlights.md) for fallbacks and styling.
 - Store comments on a server: [Storage](guides/storage.md).
 - Understand what happens when the page changes: [Concepts](concepts.md).
 - Write tests for your integration: [Testing](guides/testing.md).
+- See every feature working in a browser: [Demo app](guides/demo.md). Run `npm run build && npm run demo`.

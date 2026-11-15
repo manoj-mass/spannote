@@ -90,6 +90,20 @@ npm run test:watch   # tests in watch mode
 
 Node 20.19 or later. Tests run in jsdom; the packages import each other from source through path aliases, so no build is needed to test.
 
+## Demo
+
+A demo app shows the packages working together: comments on selected text, highlights, simulated page changes, and an optional local W3C server.
+
+```bash
+npm install
+npm run build
+npm run demo         # http://localhost:5173
+npm run demo:server  # optional: W3C server on port 4000
+npm run demo:smoke   # automated check, with both servers running
+```
+
+The demo uses the built packages, the same output a user installs. See [docs/guides/demo.md](docs/guides/demo.md) for what to try and the URL settings.
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, [docs/NAMING.md](docs/NAMING.md) for naming standards, [docs/RELEASING.md](docs/RELEASING.md) for publishing, and [AGENTS.md](AGENTS.md) for guidance on working with AI agents.
 
 ## License
