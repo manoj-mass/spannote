@@ -2,7 +2,18 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [],
+  "fixed": [
+    [
+      "@spannote/model",
+      "@spannote/anchor",
+      "@spannote/render",
+      "@spannote/protocol",
+      "@spannote/core",
+      "@spannote/react",
+      "@spannote/vue",
+      "@spannote/angular"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
