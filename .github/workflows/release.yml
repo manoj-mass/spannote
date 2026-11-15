@@ -38,7 +38,7 @@ jobs:
       - name: Check before any release
         run: npm run check
       - name: Version or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           title: 'Release: version packages'
           commit: 'Version packages'
