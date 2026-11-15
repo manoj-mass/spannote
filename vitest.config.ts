@@ -13,6 +13,8 @@ export default defineConfig({
       '@spannote/protocol': src('protocol'),
       '@spannote/core': src('core'),
       '@spannote/react': src('react'),
+      '@spannote/vue': src('vue'),
+      '@spannote/angular': src('angular'),
     },
   },
   test: {

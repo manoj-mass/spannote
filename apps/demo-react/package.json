@@ -1,5 +1,5 @@
 {
-  "name": "@spannote/demo",
+  "name": "@spannote/demo-react",
   "version": "0.0.0",
   "private": true,
   "description": "Demo app that imports the SpanNote packages and exercises them in a browser.",

@@ -33,7 +33,7 @@ async function submit(body: string) {
 }
 ```
 
-The demo app does this in `apps/demo/src/comments-panel.tsx`.
+The demo app does this in `apps/demo-react/src/comments-panel.tsx`.
 
 ## Every annotation is an orphan after a reload
 

@@ -4,16 +4,18 @@ W3C-conformant annotations for the web: select text, comment, and keep the comme
 
 SpanNote is a set of small, framework-agnostic packages. Use only what you need, from the data model up to React.
 
-| Package                                   | Responsibility                                            | DOM            |
-| ----------------------------------------- | --------------------------------------------------------- | -------------- |
-| [`@spannote/model`](packages/model)       | W3C data model: types, parsing of untrusted JSON, JSON-LD | none           |
-| [`@spannote/anchor`](packages/anchor)     | Describe a range as W3C selectors, and find it again      | reads          |
-| [`@spannote/render`](packages/render)     | Draw highlights (CSS Custom Highlight API, mark fallback) | CSS path: none |
-| [`@spannote/protocol`](packages/protocol) | W3C Annotation Protocol client and storage adapter        | none           |
-| [`@spannote/core`](packages/core)         | Annotation service: list, anchors, persistence, events    | none           |
-| [`@spannote/react`](packages/react)       | Provider and hooks for React and Next.js                  | via core       |
+| Package                                   | Responsibility                                             | DOM            |
+| ----------------------------------------- | ---------------------------------------------------------- | -------------- |
+| [`@spannote/model`](packages/model)       | W3C data model: types, parsing of untrusted JSON, JSON-LD  | none           |
+| [`@spannote/anchor`](packages/anchor)     | Describe a range as W3C selectors, and find it again       | reads          |
+| [`@spannote/render`](packages/render)     | Draw highlights (CSS Custom Highlight API, mark fallback)  | CSS path: none |
+| [`@spannote/protocol`](packages/protocol) | W3C Annotation Protocol client and storage adapter         | none           |
+| [`@spannote/core`](packages/core)         | Annotation service: list, anchors, persistence, events     | none           |
+| [`@spannote/react`](packages/react)       | Provider and hooks for React and Next.js                   | via core       |
+| [`@spannote/vue`](packages/vue)           | Plugin, composables and root binder for Vue 3              | via core       |
+| [`@spannote/angular`](packages/angular)   | Providers, signal functions and root binder for Angular 21 | via core       |
 
-Documentation: [docs/README.md](docs/README.md). Vue and Angular bindings are planned on the same core (see [the roadmap](#roadmap)).
+Documentation: [docs/README.md](docs/README.md).
 
 ## Quick start
 
@@ -74,7 +76,6 @@ From the Phase 0 spike (see the report in the spike notes):
 
 ## Roadmap
 
-- `@spannote/vue` and `@spannote/angular` bindings on the same core.
 - Revision-aware re-anchoring (edits mapped through text history).
 - Image region and media time selectors.
 - Offline outbox in `core`.
@@ -97,12 +98,14 @@ A demo app shows the packages working together: comments on selected text, highl
 ```bash
 npm install
 npm run build
-npm run demo         # http://localhost:5173
+npm run demo         # React demo: http://localhost:5173
+npm run demo:vue     # Vue demo: http://localhost:5174
+npm run demo:angular # Angular demo: http://localhost:5175
 npm run demo:server  # optional: W3C server on port 4000
-npm run demo:smoke   # automated check, with both servers running
+npm run demo:smoke   # automated check, with a demo and the server running
 ```
 
-The demo uses the built packages, the same output a user installs. See [docs/guides/demo.md](docs/guides/demo.md) for what to try and the URL settings.
+The demos use the built packages, the same output a user installs. See [docs/guides/demo.md](docs/guides/demo.md) for what to try and the URL settings.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, [docs/NAMING.md](docs/NAMING.md) for naming standards, [docs/RELEASING.md](docs/RELEASING.md) for publishing, and [AGENTS.md](AGENTS.md) for guidance on working with AI agents.
 

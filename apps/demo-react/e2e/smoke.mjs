@@ -183,6 +183,70 @@ async function main() {
     await context.close();
   });
 
+  await check('reply, edit, resolve and delete change the comment as expected', async () => {
+    const { context, page } = await open('?store=memory&renderer=css');
+    await selectText(page, '12% of users churn');
+    await comment(page, 'Base comment', 1);
+
+    await page
+      .getByTestId('comment-item')
+      .first()
+      .getByRole('button', { name: 'Reply', exact: true })
+      .click();
+    await page.waitForFunction(
+      () => document.querySelectorAll('[data-testid="comment-item"]').length === 2,
+    );
+
+    page.once('dialog', (dialog) => void dialog.accept('Edited body'));
+    await page
+      .getByTestId('comment-item')
+      .first()
+      .getByRole('button', { name: 'Edit', exact: true })
+      .click();
+    await page.waitForFunction(() =>
+      document
+        .querySelector('[data-testid="comment-item"] .comment-body')
+        ?.textContent.includes('Edited body'),
+    );
+
+    await page
+      .getByTestId('comment-item')
+      .first()
+      .getByRole('button', { name: 'Resolve', exact: true })
+      .click();
+    await page.waitForFunction(() =>
+      document
+        .querySelector('[data-testid="comment-item"] .meta')
+        ?.textContent.includes('resolved'),
+    );
+
+    await page
+      .getByTestId('comment-item')
+      .last()
+      .getByRole('button', { name: 'Delete', exact: true })
+      .click();
+    await page.waitForFunction(
+      () => document.querySelectorAll('[data-testid="comment-item"]').length === 1,
+    );
+    await context.close();
+  });
+
+  await check(
+    'the non-breaking spaces and refresh controls keep the comment attached',
+    async () => {
+      const { context, page } = await open('?store=memory&renderer=css');
+      await selectText(page, '12% of users churn');
+      await comment(page, 'Spacing check', 1);
+      await clickButton(page, 'Non-breaking spaces');
+      await page.waitForTimeout(100);
+      assert.deepEqual(await statuses(page), ['attached']);
+      await clickButton(page, 'Refresh anchors');
+      await page.waitForTimeout(100);
+      assert.deepEqual(await statuses(page), ['attached']);
+      await context.close();
+    },
+  );
+
   await browser.close();
 
   assert.deepEqual(pageErrors, [], `uncaught page errors: ${pageErrors.join('; ')}`);

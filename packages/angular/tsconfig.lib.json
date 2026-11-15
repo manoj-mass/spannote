@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {},
+    "target": "ES2022",
+    "useDefineForClassFields": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial",
+    "strictInjectionParameters": true,
+    "strictTemplates": true
+  },
+  "include": ["src/**/*.ts"]
+}
