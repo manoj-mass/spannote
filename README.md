@@ -1,5 +1,10 @@
 # SpanNote
 
+[![CI](https://github.com/manoj-mass/spannote/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/manoj-mass/spannote/actions/workflows/ci.yml)
+[![Release](https://github.com/manoj-mass/spannote/actions/workflows/release.yml/badge.svg)](https://github.com/manoj-mass/spannote/actions/workflows/release.yml)
+[![npm @spannote/core](https://img.shields.io/npm/v/@spannote/core.svg)](https://www.npmjs.com/package/@spannote/core)
+[![License](https://img.shields.io/npm/l/@spannote/core.svg)](LICENSE)
+
 W3C-conformant annotations for the web: select text, comment, and keep the comment attached when the page changes.
 
 SpanNote is a set of small, framework-agnostic packages. Use only what you need, from the data model up to React.
