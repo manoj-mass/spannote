@@ -22,6 +22,50 @@ SpanNote is a set of small, framework-agnostic packages. Use only what you need,
 
 Documentation: [docs/README.md](docs/README.md).
 
+## Architecture
+
+Dependencies point downward. Framework bindings sit on the core service, and the core depends only on
+the libraries it needs. The demo apps import the packages the same way an outside project does.
+
+```mermaid
+flowchart TB
+  subgraph apps["Demo apps"]
+    react_demo["demo-react<br/>Vite, port 5173"]
+    vue_demo["demo-vue<br/>Vite, port 5174"]
+    ng_demo["demo-angular<br/>Angular, port 5175"]
+  end
+  subgraph bindings["Framework bindings"]
+    react["@spannote/react"]
+    vue["@spannote/vue"]
+    angular["@spannote/angular"]
+  end
+  core["@spannote/core<br/>Service, events, store port"]
+  subgraph libs["Libraries"]
+    anchor["anchor<br/>Find text again"]
+    model["model<br/>Types, JSON-LD"]
+    protocol["protocol<br/>W3C HTTP adapter"]
+    render["render<br/>Draw highlights"]
+  end
+  dom[("Browser DOM")]
+  w3c[("W3C server")]
+
+  react_demo --> react
+  vue_demo --> vue
+  ng_demo --> angular
+  react --> core
+  vue --> core
+  angular --> core
+  core --> anchor
+  core --> model
+  anchor --> model
+  protocol --> model
+  anchor --> dom
+  render --> dom
+  protocol --> w3c
+```
+
+The layers, and the rules behind them, are described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
 ## Quick start
 
 ```bash
