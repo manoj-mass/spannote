@@ -5,6 +5,7 @@ import { CommentsPanel } from './comments-panel';
 import { createDemoService, readConfig } from './config';
 import { useHighlights } from './highlights';
 import { PageChanges } from './page-changes';
+import { SelectionComposer } from './selection-composer';
 
 export function App() {
   const config = useMemo(() => readConfig(window.location.search), []);
@@ -44,10 +45,11 @@ export function App() {
           ) : null}
         </p>
       </header>
+      <SelectionComposer article={article} service={service} report={setMessage} />
       <main className="layout">
         <Article onRoot={setArticle} />
         <aside className="sidebar">
-          <CommentsPanel article={article} service={service} report={setMessage} />
+          <CommentsPanel service={service} report={setMessage} />
           <PageChanges article={article} service={service} report={setMessage} />
         </aside>
       </main>

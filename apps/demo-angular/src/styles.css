@@ -159,6 +159,42 @@ button:hover {
   text-decoration: underline dotted;
 }
 
+/* The text a new comment is about, while its comment box is open. */
+::highlight(spannote-pending) {
+  background-color: rgb(10 108 255 / 0.25);
+}
+
+/* The Comment button and the comment box, placed next to the selection by inline styles. */
+.selection-trigger,
+.composer {
+  position: fixed;
+  z-index: 10;
+}
+
+.selection-trigger {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
+}
+
+.composer {
+  width: 320px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+}
+
+.composer blockquote {
+  margin: 0 0 8px;
+  padding-left: 8px;
+  border-left: 3px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
 /* Fallback renderer (?renderer=mark). */
 mark.spannote-highlight {
   background-color: rgb(255 214 0 / 0.5);

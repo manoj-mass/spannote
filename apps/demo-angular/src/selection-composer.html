@@ -1,0 +1,38 @@
+@if (trigger() && box(); as rect) {
+<button
+  type="button"
+  class="selection-trigger"
+  data-testid="selection-comment"
+  [style.top.px]="rect.bottom + 6"
+  [style.left.px]="rect.left"
+  (mousedown)="$event.preventDefault()"
+  (click)="startComment()"
+>
+  Comment
+</button>
+} @if (pending() && box(); as rect) {
+<section
+  class="composer"
+  role="dialog"
+  aria-label="New comment"
+  data-testid="composer"
+  [style.top.px]="rect.bottom + 8"
+  [style.left.px]="left()"
+>
+  <blockquote>{{ quote() }}</blockquote>
+  <textarea
+    #textarea
+    data-testid="comment-input"
+    aria-label="Comment text"
+    rows="3"
+    placeholder="Write a comment"
+    [value]="draft()"
+    (input)="onDraftInput($event)"
+    (keydown.escape)="close()"
+  ></textarea>
+  <div class="button-row">
+    <button type="button" data-testid="comment-submit" (click)="save()">Save comment</button>
+    <button type="button" (click)="close()">Cancel</button>
+  </div>
+</section>
+}
