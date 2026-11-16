@@ -62,6 +62,13 @@ flowchart TB
   anchor --> dom
   render --> dom
   protocol --> w3c
+
+  classDef binding fill:#E1F5EE,stroke:#0F6E56,color:#085041
+  classDef spannote fill:#EEEDFE,stroke:#534AB7,color:#3C3489
+  classDef neutral fill:#F1EFE8,stroke:#5F5E5A,color:#444441
+  class react,vue,angular binding
+  class core,anchor,model,protocol,render spannote
+  class react_demo,vue_demo,ng_demo,dom,w3c neutral
 ```
 
 The layers, and the rules behind them, are described in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
