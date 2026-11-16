@@ -38,6 +38,7 @@ async function selectText(page, needle) {
 }
 
 async function comment(page, body, expectedCount) {
+  await page.getByTestId('selection-comment').click();
   await page.getByTestId('comment-input').fill(body);
   await page.getByTestId('comment-submit').click();
   await page.waitForFunction(
@@ -105,6 +106,23 @@ async function main() {
       await context.close();
     },
   );
+
+  await check('the selected text stays highlighted while the comment is typed', async () => {
+    const { context, page } = await open('?store=memory&renderer=css');
+    await selectText(page, '12% of users churn');
+    await page.getByTestId('selection-comment').click();
+    await page.getByTestId('comment-input').fill('Typed after selecting');
+    const pending = await page.evaluate(() => CSS.highlights.has('spannote-pending'));
+    assert.equal(pending, true, 'the pending highlight should stay while the box is open');
+    await page.getByTestId('comment-submit').click();
+    await page.waitForFunction(
+      () => document.querySelectorAll('[data-testid="comment-item"]').length === 1,
+    );
+    assert.deepEqual(await statuses(page), ['attached']);
+    const cleared = await page.evaluate(() => CSS.highlights.has('spannote-pending'));
+    assert.equal(cleared, false, 'the pending highlight should be removed after saving');
+    await context.close();
+  });
 
   await check('an inserted ad and a wrapper keep the comment attached', async () => {
     const { context, page } = await open('?store=memory&renderer=css');
@@ -188,6 +206,7 @@ async function main() {
     await selectText(page, '12% of users churn');
     await comment(page, 'Base comment', 1);
 
+    page.once('dialog', (dialog) => void dialog.accept('Reply text'));
     await page
       .getByTestId('comment-item')
       .first()

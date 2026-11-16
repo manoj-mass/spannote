@@ -6,6 +6,8 @@
   </p>
 </header>
 
+<app-selection-composer [article]="articleElement()" (status)="message.set($event)" />
+
 <main class="layout">
   <!-- ngPreserveWhitespaces keeps the deliberate extra spaces, so the anchoring cases stay realistic. -->
   <article #article class="article" data-testid="article" ngPreserveWhitespaces>
@@ -21,22 +23,7 @@
   <aside class="sidebar">
     <section class="panel" aria-labelledby="comments-heading">
       <h2 id="comments-heading">Comments</h2>
-
-      <p class="hint" data-testid="selection-preview">Selection: {{ selectionLabel() }}</p>
-
-      <textarea
-        data-testid="comment-input"
-        aria-label="Comment text"
-        rows="3"
-        placeholder="Write a comment, then select text in the article and press Comment on selection."
-        [value]="draft()"
-        (input)="onDraftInput($event)"
-      ></textarea>
-      <div class="button-row">
-        <button type="button" data-testid="comment-submit" (click)="commentOnSelection()">
-          Comment on selection
-        </button>
-      </div>
+      <p class="hint">Select text in the article, then press Comment next to the selection.</p>
 
       <ul class="comment-list" data-testid="comment-list">
         @for (annotation of annotations(); track annotation.id) {

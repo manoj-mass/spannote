@@ -19,9 +19,9 @@ report problems in other browsers.
 ## What to try
 
 1. **Comment on a selection.** Select words in the article, type a comment in the box, and press
-   _Comment on selection_. The comment appears, with the status `attached`, and the selected text is
-   highlighted. The comment box takes focus, which clears the page selection, so the demo remembers the
-   last selection inside the article.
+   _Comment_ appears next to the selection. Press it to open the comment box beside the text, and
+   _Save comment_ to create the comment. The selected text stays highlighted while you type, because
+   the demo saves the range when you press _Comment_.
 2. **Change the page.** Use _Simulate page changes_:
    - _Insert ad_ adds an element inside the article. The comment should stay `attached`.
    - _Wrap content_ moves the article into a new `<div>`. The comment should stay `attached`.
@@ -29,7 +29,7 @@ report problems in other browsers.
    - _Duplicate quote_ copies the quote to the end of the page. The comment must stay on the original.
    - _Non-breaking spaces_ changes every third space. The comment should stay `attached`.
 3. **Reply, edit, resolve, delete.** Each comment has buttons for these. _Edit_ asks for new text in a
-   prompt. _Reply_ uses the text in the comment box.
+   prompt.
 4. **Compare the renderers.** Open `?renderer=mark` to force the `<mark>` fallback. Highlights become
    `<mark>` elements instead of CSS highlights.
 5. **Persist to a server.** Start `npm run demo:server`, then open `?store=w3c`. Comments survive a

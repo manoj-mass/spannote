@@ -2,7 +2,6 @@ import { Component, computed, DestroyRef, effect, inject, signal, viewChild } fr
 import type { ElementRef } from '@angular/core';
 import type { AnchorState, AnnotationService } from '@spannote/core';
 import type { Annotation } from '@spannote/model';
-import { isVersionConflict } from '@spannote/model';
 import { createHighlightRenderer } from '@spannote/render';
 import {
   attachSpanNoteRoot,
@@ -10,13 +9,9 @@ import {
   injectAnnotations,
   injectSpanNote,
 } from '@spannote/angular';
+import { runAction } from './feedback';
 import { readConfig } from './config';
-
-function describe(error: unknown): string {
-  if (isVersionConflict(error))
-    return 'Conflict: someone else changed this comment. Reload and try again.';
-  return error instanceof Error ? error.message : String(error);
-}
+import { SelectionComposer } from './selection-composer';
 
 function quoteOf(annotation: Annotation): string {
   const selector = annotation.target.selector.find((s) => s.type === 'TextQuoteSelector');
@@ -65,13 +60,14 @@ const changes: Record<string, (root: HTMLElement, quote: string | undefined) => 
     let count = 0;
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const text = node as Text;
-      text.data = text.data.replace(/ /g, () => (count++ % 3 === 0 ? ' ' : ' '));
+      text.data = text.data.replace(/ /g, () => (count++ % 3 === 0 ? ' ' : ' '));
     }
   },
 };
 
 @Component({
   selector: 'app-root',
+  imports: [SelectionComposer],
   templateUrl: './app.html',
 })
 export class App {
@@ -81,21 +77,13 @@ export class App {
   private readonly anchors = injectAnchorStates();
 
   private readonly articleRef = viewChild<ElementRef<HTMLElement>>('article');
+  readonly articleElement = computed(() => this.articleRef()?.nativeElement);
 
   readonly message = signal('Loading comments…');
-  readonly draft = signal('');
-  readonly selection = signal('');
-  readonly selectionLabel = computed(() => {
-    const text = this.selection();
-    return text === '' ? 'none' : `“${text.slice(0, 80)}”`;
-  });
   private readonly firstQuote = computed(() => {
     const first = this.annotations()[0];
     return first ? quoteOf(first) : undefined;
   });
-
-  // Focusing the comment box clears the page selection, so keep the last selection inside the article.
-  private lastRange: Range | undefined;
 
   private readonly highlights =
     this.config.renderer === 'mark'
@@ -108,12 +96,7 @@ export class App {
       this.paint(this.anchors());
     });
 
-    const onSelectionChange = (): void => {
-      this.updateSelection();
-    };
-    document.addEventListener('selectionchange', onSelectionChange);
     inject(DestroyRef).onDestroy(() => {
-      document.removeEventListener('selectionchange', onSelectionChange);
       this.highlights.dispose();
     });
 
@@ -137,36 +120,10 @@ export class App {
     return quoteOf(annotation);
   }
 
-  onDraftInput(event: Event): void {
-    this.draft.set((event.target as HTMLTextAreaElement).value);
-  }
-
-  commentOnSelection(): void {
-    const root = this.articleRef()?.nativeElement;
-    const saved = this.lastRange;
-    const range =
-      this.selectedRange() ??
-      (saved && root?.contains(saved.commonAncestorContainer) && !saved.collapsed
-        ? saved
-        : undefined);
-    if (!range) {
-      this.message.set('Select some text inside the article first.');
-      return;
-    }
-    if (this.draft().trim() === '') {
-      this.message.set('Write a comment first.');
-      return;
-    }
-    void this.attempt('Comment', async () => {
-      await this.service.createFromRange(range, { body: this.draft() });
-      this.draft.set('');
-    });
-  }
-
   reply(annotation: Annotation): void {
-    void this.attempt('Reply', () =>
-      this.service.reply(annotation, { body: this.draft() || 'Reply' }),
-    );
+    const body = window.prompt('Reply', 'Reply');
+    if (body !== null && body.trim() !== '')
+      void this.attempt('Reply', () => this.service.reply(annotation, { body }));
   }
 
   editComment(annotation: Annotation): void {
@@ -207,27 +164,14 @@ export class App {
     window.location.reload();
   }
 
-  private selectedRange(): Range | undefined {
-    const root = this.articleRef()?.nativeElement;
-    const current = window.getSelection();
-    if (!root || !current || current.rangeCount === 0 || current.isCollapsed) return undefined;
-    const range = current.getRangeAt(0);
-    return root.contains(range.commonAncestorContainer) ? range : undefined;
-  }
-
-  private updateSelection(): void {
-    const range = this.selectedRange();
-    if (range) this.lastRange = range.cloneRange();
-    this.selection.set(range?.toString() ?? '');
-  }
-
-  private async attempt(label: string, action: () => Promise<unknown>): Promise<void> {
-    try {
-      await action();
-      this.message.set(`${label}: done.`);
-    } catch (error) {
-      this.message.set(`${label} failed. ${describe(error)}`);
-    }
+  private attempt(label: string, action: () => Promise<unknown>): Promise<void> {
+    return runAction(
+      (text) => {
+        this.message.set(text);
+      },
+      label,
+      action,
+    );
   }
 
   private paint(states: ReadonlyMap<string, AnchorState>): void {

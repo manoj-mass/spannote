@@ -34,12 +34,13 @@ other browsers.
 
 ### Comment on a selection
 
-Select words in the article, type a comment in the box, and press **Comment on selection**. The
-comment appears with the status `attached`, and the selected text is highlighted.
+Select words in the article, press **Comment** next to the selection, type a comment, and press
+**Save comment**. The comment box opens beside the text, and the selected text stays highlighted
+while you type. The comment appears with the status `attached`.
 
-The comment box takes focus when you click into it, which clears the page selection. The demo
-therefore remembers the last selection inside the article and uses it when you press the button.
-Your own code needs the same handling. See
+The comment box takes focus when it opens, which clears the page selection. The demo saves the range
+when you press **Comment**, and it draws that range as a CSS highlight while the box is open. Your
+own code needs the same handling. See
 [the selection pitfall](../troubleshooting.md#the-comment-is-not-created-when-i-type-in-the-comment-box).
 
 ### Change the page
@@ -58,7 +59,7 @@ The **Simulate page changes** buttons edit the article's DOM and then re-resolve
 
 Each comment has four buttons:
 
-- **Reply** creates a reply to the comment, using the text in the comment box.
+- **Reply** asks for the reply text in a prompt.
 - **Edit** asks for new text in a prompt.
 - **Resolve** toggles the comment's `status` between `open` and `resolved`.
 - **Delete** removes the comment.

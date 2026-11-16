@@ -2,7 +2,6 @@
 import { computed, onUnmounted, ref, watch } from 'vue';
 import type { AnchorState, AnnotationService } from '@spannote/core';
 import type { Annotation } from '@spannote/model';
-import { isVersionConflict } from '@spannote/model';
 import { createHighlightRenderer } from '@spannote/render';
 import {
   useAnchorStates,
@@ -10,6 +9,8 @@ import {
   useAnnotationService,
   useSpanNoteRoot,
 } from '@spannote/vue';
+import SelectionComposer from './SelectionComposer.vue';
+import { runAction } from './feedback';
 import { readConfig } from './service';
 
 const config = readConfig(window.location.search);
@@ -21,40 +22,15 @@ const article = ref<HTMLElement | null>(null);
 useSpanNoteRoot(article);
 
 const message = ref('Loading comments…');
-const draft = ref('');
-const selection = ref('');
-// Focusing the comment box clears the page selection, so keep the last selection inside the article.
-let lastRange: Range | undefined;
 
-function selectedRange(): Range | undefined {
-  const current = window.getSelection();
-  if (!article.value || !current || current.rangeCount === 0 || current.isCollapsed)
-    return undefined;
-  const range = current.getRangeAt(0);
-  return article.value.contains(range.commonAncestorContainer) ? range : undefined;
-}
-
-function onSelectionChange(): void {
-  const range = selectedRange();
-  if (range) lastRange = range.cloneRange();
-  selection.value = range?.toString() ?? '';
-}
-document.addEventListener('selectionchange', onSelectionChange);
-onUnmounted(() => document.removeEventListener('selectionchange', onSelectionChange));
-
-function describe(error: unknown): string {
-  if (isVersionConflict(error))
-    return 'Conflict: someone else changed this comment. Reload and try again.';
-  return error instanceof Error ? error.message : String(error);
-}
-
-async function attempt(label: string, action: () => Promise<unknown>): Promise<void> {
-  try {
-    await action();
-    message.value = `${label}: done.`;
-  } catch (error) {
-    message.value = `${label} failed. ${describe(error)}`;
-  }
+function attempt(label: string, action: () => Promise<unknown>): Promise<void> {
+  return runAction(
+    (text) => {
+      message.value = text;
+    },
+    label,
+    action,
+  );
 }
 
 function quoteOf(annotation: Annotation): string {
@@ -66,25 +42,10 @@ function stateOf(id: string): AnchorState | undefined {
   return anchors.value.get(id);
 }
 
-function commentOnSelection(): void {
-  const saved = lastRange;
-  const range =
-    selectedRange() ??
-    (saved && article.value?.contains(saved.commonAncestorContainer) && !saved.collapsed
-      ? saved
-      : undefined);
-  if (!range) {
-    message.value = 'Select some text inside the article first.';
-    return;
-  }
-  if (draft.value.trim() === '') {
-    message.value = 'Write a comment first.';
-    return;
-  }
-  void attempt('Comment', async () => {
-    await service.createFromRange(range, { body: draft.value });
-    draft.value = '';
-  });
+function replyTo(annotation: Annotation): void {
+  const body = window.prompt('Reply', 'Reply');
+  if (body !== null && body.trim() !== '')
+    void attempt('Reply', () => service.reply(annotation, { body }));
 }
 
 function editComment(annotation: Annotation): void {
@@ -176,7 +137,7 @@ const changes: Record<string, (root: HTMLElement, quote: string | undefined) => 
     let count = 0;
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       const text = node as Text;
-      text.data = text.data.replace(/ /g, () => (count++ % 3 === 0 ? ' ' : ' '));
+      text.data = text.data.replace(/ /g, () => (count++ % 3 === 0 ? ' ' : ' '));
     }
   },
 };
@@ -206,6 +167,8 @@ function applyChange(label: string): void {
     </p>
   </header>
 
+  <SelectionComposer :article="article" :service="service" @status="message = $event" />
+
   <main class="layout">
     <!-- v-once: the article is static, so the page-change buttons can edit its DOM safely. -->
     <article ref="article" v-once class="article" data-testid="article">
@@ -222,23 +185,7 @@ function applyChange(label: string): void {
     <aside class="sidebar">
       <section class="panel" aria-labelledby="comments-heading">
         <h2 id="comments-heading">Comments</h2>
-
-        <p class="hint" data-testid="selection-preview">
-          Selection: {{ selection === '' ? 'none' : `“${selection.slice(0, 80)}”` }}
-        </p>
-
-        <textarea
-          v-model="draft"
-          data-testid="comment-input"
-          aria-label="Comment text"
-          rows="3"
-          placeholder="Write a comment, then select text in the article and press Comment on selection."
-        />
-        <div class="button-row">
-          <button type="button" data-testid="comment-submit" @click="commentOnSelection">
-            Comment on selection
-          </button>
-        </div>
+        <p class="hint">Select text in the article, then press Comment next to the selection.</p>
 
         <ul class="comment-list" data-testid="comment-list">
           <li
@@ -263,14 +210,7 @@ function applyChange(label: string): void {
               <template v-if="annotation.status"> · {{ annotation.status }}</template>
             </p>
             <div class="button-row">
-              <button
-                type="button"
-                @click="
-                  attempt('Reply', () => service.reply(annotation, { body: draft || 'Reply' }))
-                "
-              >
-                Reply
-              </button>
+              <button type="button" @click="replyTo(annotation)">Reply</button>
               <button type="button" @click="editComment(annotation)">Edit</button>
               <button type="button" @click="toggleResolved(annotation)">Resolve</button>
               <button type="button" @click="attempt('Delete', () => service.remove(annotation.id))">
