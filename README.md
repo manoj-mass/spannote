@@ -151,6 +151,8 @@ Node 20.19 or later. Tests run in jsdom; the packages import each other from sou
 
 A demo app shows the packages working together: comments on selected text, highlights, simulated page changes, and an optional local W3C server.
 
+**Live demo: [spannote.vercel.app](https://spannote.vercel.app/)** (the React demo, in memory mode).
+
 ```bash
 npm install
 npm run build
