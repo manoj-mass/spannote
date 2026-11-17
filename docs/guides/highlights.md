@@ -92,6 +92,64 @@ const fallback = new MarkHighlightRenderer('my-highlight');
 createHighlightRenderer({ environment: { highlights: fakeRegistry, Highlight: FakeHighlight } });
 ```
 
+## Choosing a renderer
+
+Use the automatic choice unless you have a reason not to:
+
+| Choice              | Code                                                  | Use when                                                                                                              |
+| ------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Automatic (default) | `createHighlightRenderer()`                           | Most apps. CSS highlights where the browser supports them, `<mark>` elements elsewhere.                               |
+| CSS only            | `new CssHighlightRenderer(CSS.highlights, Highlight)` | The DOM must never change. Check `'highlights' in CSS` first, because older browsers have no `CSS.highlights`.        |
+| `<mark>` only       | `new MarkHighlightRenderer()`                         | You need highlights as real elements, for example to attach click handlers, and your framework tolerates extra nodes. |
+
+The demo's `?renderer=mark` setting uses the `<mark>` option. The demo guide lists the URL settings.
+
+## Accessibility
+
+Each option affects assistive technology differently. The text stays readable in both cases, but the
+highlight itself reaches a screen reader only in some cases.
+
+- **CSS highlights** leave the text and the DOM as they are, so a screen reader reads the article in
+  its original order. The highlight is visual only. Chrome's guidance says custom highlights are not
+  exposed to the accessibility tree, so a screen reader user won't hear that a passage has a comment.
+- **`<mark>` elements** are semantic, and some screen readers announce them. Their support varies, so
+  test with the screen readers your users rely on. The extra elements also split text nodes, which
+  can affect text search and reading.
+
+For both options:
+
+- Don't rely on colour alone. The fuzzy highlight adds an underline, and the comment list gives the
+  same information in text. Keep that list as the main accessible route to the comments.
+- Keep the text readable on the highlight colour. Check the contrast of your highlight colour against
+  the text, using WCAG 2.2 criterion 1.4.3 (at least 4.5:1 for normal text).
+- Highlights can't receive keyboard focus. If you add click handling, give keyboard users the same
+  action, such as opening the comment from the list.
+- The comment list and the comment box need keyboard support. Test them without a mouse.
+
+## Browser support
+
+| Browser         | CSS highlights                                    | `<mark>` fallback |
+| --------------- | ------------------------------------------------- | ----------------- |
+| Chrome and Edge | 105 and later                                     | Works everywhere  |
+| Safari          | 17.2 and later                                    | Works everywhere  |
+| Firefox         | 140 and later (added June 2025)                   | Works everywhere  |
+| Older browsers  | Not supported; the automatic choice uses `<mark>` | Works             |
+
+These versions come from MDN and web.dev summaries, so check the
+[MDN compatibility table](https://developer.mozilla.org/en-US/docs/Web/API/css_custom_highlight_api)
+before you publish. Some members lag behind the core API. For example, `highlightsFromPoint()` was
+supported in Chrome only when this page was written.
+
+Our tests run in Chrome. Safari was measured in the Phase 0 spike, and Firefox has not been tested
+with SpanNote.
+
+Sources:
+
+- [web.dev, New to the web platform in June 2025](https://web.dev/blog/web-platform-06-2025)
+- [MDN, CSS Custom Highlight API](https://developer.mozilla.org/en-US/docs/Web/API/css_custom_highlight_api)
+- [Chrome, Highlight text ranges](https://developer.chrome.com/docs/modern-web-guidance/guides/ui-behaviors/highlight-text-ranges)
+- [W3C CSS WG issue #6498, how highlights are exposed to the accessibility tree](https://github.com/w3c/csswg-drafts/issues/6498)
+
 ## Limits
 
 - Ranges are live. A DOM change can move or collapse them. Redraw after the page changes; the
