@@ -20,5 +20,8 @@ renderer.draw('comments', [range]);
 }
 ```
 
+Choosing a renderer, accessibility notes, and browser support are in
+[docs/guides/highlights.md](../../docs/guides/highlights.md).
+
 Measured in the spike: zero DOM mutations in Chrome and Safari for the CSS path, against 26 to 90
 mutation records for span wrapping, measured before the switch to `<mark>`. Re-measure before relying on the exact figure.
