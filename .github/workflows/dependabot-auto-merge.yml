@@ -1,0 +1,68 @@
+# Auto-merges Dependabot pull requests that are low risk and whose required checks pass.
+#
+# Only patch and minor updates of development dependencies are merged automatically. Major
+# updates, production dependencies, GitHub Actions and the UI frameworks (React, Vue, Angular,
+# Vite) are left for a person to review. The browser smoke test is not in CI, so a UI framework
+# change can pass CI and still break the demo.
+#
+# This runs with pull_request_target so that it can approve and merge. It never checks out or runs
+# the pull request's code, so do not add a checkout step here.
+#
+# Requires: branch protection on main with the CI checks marked as required, and the repository
+# settings "Allow auto-merge" and "Allow GitHub Actions to create and approve pull requests".
+
+name: Dependabot auto-merge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  auto-merge:
+    name: Auto-merge safe Dependabot updates
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Read the update metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decide whether the update is safe to merge
+        id: check
+        env:
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          DEPENDENCY_TYPE: ${{ steps.metadata.outputs.dependency-type }}
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+        run: |
+          safe=true
+          case "$UPDATE_TYPE" in
+            version-update:semver-patch|version-update:semver-minor) ;;
+            *) safe=false ;;
+          esac
+          [ "$DEPENDENCY_TYPE" = "direct:development" ] || safe=false
+          if echo "$DEPENDENCY_NAMES" | grep -Eiq 'react|vue|angular|vite'; then
+            safe=false
+          fi
+          echo "safe=$safe" >> "$GITHUB_OUTPUT"
+          echo "Update: $UPDATE_TYPE, $DEPENDENCY_TYPE, $DEPENDENCY_NAMES -> auto-merge: $safe"
+
+      - name: Approve and enable auto-merge
+        if: steps.check.outputs.safe == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          gh pr review "$PR_URL" --approve --body "Patch or minor development update. Required checks decide the merge."
+          gh pr merge "$PR_URL" --auto --squash
+
+      - name: Leave for review
+        if: steps.check.outputs.safe != 'true'
+        run: echo "This update needs a person to review it. Auto-merge was not enabled."
