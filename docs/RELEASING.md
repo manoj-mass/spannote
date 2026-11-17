@@ -103,6 +103,29 @@ npm install @spannote/core@0.1.0 @spannote/react@0.1.0 @spannote/render@0.1.0 re
 Then copy `apps/demo-react/src` into that folder and run the demo against the registry packages. Repeat the
 smoke test there before you announce a release.
 
+## Dependency updates
+
+Dependabot opens update pull requests weekly (`.github/dependabot.yml`). The workflow
+`.github/workflows/dependabot-auto-merge.yml` approves and auto-merges only patch and minor updates of
+development dependencies, and only when the required checks pass. Everything else waits for review:
+
+- major updates, production dependencies and GitHub Actions updates;
+- React, Vue, Angular and Vite. The browser smoke test is not in CI, so a framework change can pass CI
+  and still break the demo.
+
+Merging to `main` does not publish a package. A release still needs `npm run version:bump` and approval in
+the `npm-release` environment. Merging does deploy the demo, if Vercel is connected to `main`.
+
+Set this up once on GitHub:
+
+1. **Settings, then Branches**: protect `main`, and mark the CI checks as required (`Check` on Node 20, 22
+   and 24, and `Pack check`).
+2. **Settings, then General**: turn on **Allow auto-merge**.
+3. **Settings, then Actions, then General**: turn on **Allow GitHub Actions to create and approve pull
+   requests**.
+
+Without step 1, auto-merge merges a pull request before CI has run.
+
 ## Checklist before every publish
 
 - [ ] `npm run version:bump` set the new version, and `git diff` shows only the expected files.
