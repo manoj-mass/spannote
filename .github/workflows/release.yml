@@ -37,8 +37,9 @@ jobs:
       - run: npm ci
       - name: Check before any release
         run: npm run check
+      # v1 works with @changesets/cli v2, which this repo uses. v2 needs CLI v3 and renamed its inputs.
       - name: Version or publish
-        uses: changesets/action@v2
+        uses: changesets/action@v1
         with:
           title: 'Release: version packages'
           commit: 'Version packages'

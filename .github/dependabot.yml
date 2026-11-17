@@ -21,3 +21,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # Changesets action v2 needs @changesets/cli v3. Upgrade the CLI first, then this.
+      - dependency-name: changesets/action
+        update-types: ['version-update:semver-major']
